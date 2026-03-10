@@ -170,15 +170,14 @@ logger.info(f"   • Sensibilidad (Recall) : {recall*100:.2f}%")
 logger.info(f"   • F1-Score              : {f1:.4f}")
 
 # Reporte de clasificación
-report = classification_report(
+report_text = classification_report(
     y_test, y_pred,
     target_names=["Normal (0)", "Fallo (1)"],
     digits=2,
-    output_dict=True
+    output_dict=False
 )
 logger.debug("\n📊 REPORTE DETALLADO DE CLASIFICACIÓN:")
-logger.debug(f"   Normal (0): Precisión={report.get('Normal (0)', {}).get('precision', 0):.2f}, Recall={report.get('Normal (0)', {}).get('recall', 0):.2f}, F1={report.get('Normal (0)', {}).get('f1-score', 0):.2f}")
-logger.debug(f"   Fallo (1) : Precisión={report.get('Fallo (1)', {}).get('precision', 0):.2f}, Recall={report.get('Fallo (1)', {}).get('recall', 0):.2f}, F1={report.get('Fallo (1)', {}).get('f1-score', 0):.2f}")
+logger.debug("\n" + str(report_text))
 
 # ── PASO 7: Caso de Uso Real — Nueva Lectura de Sensores ─────
 logger.info("\n[PASO 7] Realizando predicción con nueva lectura de sensores...")
