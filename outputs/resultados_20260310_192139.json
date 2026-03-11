@@ -1,0 +1,57 @@
+{
+    "timestamp": "2026-03-10T19:21:42.873484",
+    "modelo": {
+        "tipo": "GradientBoostingClassifier",
+        "parametros": {
+            "n_estimators": 50,
+            "learning_rate": 0.15,
+            "max_depth": 2,
+            "min_samples_split": 10,
+            "min_samples_leaf": 5,
+            "subsample": 0.8
+        }
+    },
+    "metricas_globales": {
+        "accuracy": 0.8875,
+        "precision": 0.8888888888888888,
+        "recall": 0.8,
+        "f1_score": 0.8421052631578947
+    },
+    "datos": {
+        "total_registros": 800,
+        "registros_normales": 500,
+        "registros_fallo": 300,
+        "split_train": 640,
+        "split_test": 160
+    },
+    "prediccion_nueva_lectura": {
+        "entrada": {
+            "temperatura": 92.0,
+            "vibracion": 7.8,
+            "presion_aceite": 3.5,
+            "rpm": 1750.0,
+            "humedad": 55.0,
+            "velocidad_aire": 10.5,
+            "carga": 70.0
+        },
+        "prediccion": 1,
+        "probabilidad_normal": 0.03038781809124058,
+        "probabilidad_fallo": 0.9696121819087594,
+        "accion_recomendada": "⚠️  ACCIÓN: Programar mantenimiento URGENTE"
+    },
+    "importancia_variables": {
+        "velocidad_aire": 0.3267196334119067,
+        "vibracion": 0.1875117470327869,
+        "humedad": 0.16739160616955345,
+        "rpm": 0.14187002251629083,
+        "presion_aceite": 0.06653981730363027,
+        "temperatura": 0.05674176083247263,
+        "carga": 0.053225412733359165
+    },
+    "matriz_confusion": {
+        "TP": 48,
+        "TN": 94,
+        "FP": 6,
+        "FN": 12
+    }
+}

@@ -1,0 +1,108 @@
+2026-03-10 18:54:34 - [INFO    ] - ======================================================================
+2026-03-10 18:54:34 - [INFO    ] -   INICIANDO PREDICCIÓN DE FALLO DE MÁQUINA — GRADIENT BOOSTING
+2026-03-10 18:54:34 - [INFO    ] - ======================================================================
+2026-03-10 18:54:34 - [INFO    ] - 📁 Archivo de log: ./outputs/ejecucion_20260310_185434.log
+2026-03-10 18:54:34 - [INFO    ] - 
+[PASO 1] Importando librerías...
+2026-03-10 18:54:36 - [INFO    ] - ✅ Todas las librerías importadas correctamente
+2026-03-10 18:54:36 - [DEBUG   ] -    NumPy v2.4.3
+2026-03-10 18:54:36 - [DEBUG   ] -    Pandas v3.0.1
+2026-03-10 18:54:36 - [DEBUG   ] -    Scikit-learn: OK
+2026-03-10 18:54:36 - [INFO    ] - 
+[PASO 2] Generando datos simulados de sensores...
+2026-03-10 18:54:36 - [DEBUG   ] -    Creando dataset de operación NORMAL (400 registros)...
+2026-03-10 18:54:36 - [DEBUG   ] -    Creando dataset de situación de FALLO (100 registros)...
+2026-03-10 18:54:36 - [DEBUG   ] -    Mezclando datos aleatoriamente...
+2026-03-10 18:54:36 - [INFO    ] - ✅ Dataset generado: 500 registros
+2026-03-10 18:54:36 - [INFO    ] -    • Operación normal : 400 registros (80.0%)
+2026-03-10 18:54:36 - [INFO    ] -    • Con fallo        : 100 registros (20.0%)
+2026-03-10 18:54:36 - [INFO    ] - 
+[PASO 3] Separando variables de entrada y objetivo...
+2026-03-10 18:54:36 - [INFO    ] - ✅ Variables de entrada (X):
+2026-03-10 18:54:36 - [DEBUG   ] -    • temperatura: min=53.79, max=120.54, media=75.35
+2026-03-10 18:54:36 - [DEBUG   ] -    • vibracion: min=2.65, max=10.67, media=4.90
+2026-03-10 18:54:36 - [DEBUG   ] -    • presion_aceite: min=2.12, max=5.76, media=4.67
+2026-03-10 18:54:36 - [DEBUG   ] -    • rpm: min=1353.93, max=2113.77, media=1563.49
+2026-03-10 18:54:36 - [INFO    ] - ✅ Variable objetivo (y): 'fallo' → 0=Normal | 1=Fallo
+2026-03-10 18:54:36 - [INFO    ] - 
+[PASO 4] Dividiendo datos en entrenamiento (80%) y prueba (20%)...
+2026-03-10 18:54:36 - [INFO    ] - ✅ División completada:
+2026-03-10 18:54:36 - [INFO    ] -    • Train (entrena) : 400 registros (80%)
+2026-03-10 18:54:36 - [INFO    ] -    • Test  (evalúa)  : 100 registros (20%)
+2026-03-10 18:54:36 - [DEBUG   ] -    • Clases en train: 320 normal, 80 fallo
+2026-03-10 18:54:36 - [DEBUG   ] -    • Clases en test : 80 normal, 20 fallo
+2026-03-10 18:54:36 - [INFO    ] - 
+[PASO 5] Creando y entrenando modelo Gradient Boosting...
+2026-03-10 18:54:36 - [DEBUG   ] -    Parámetros del modelo:
+2026-03-10 18:54:36 - [DEBUG   ] -    • n_estimators: 100
+2026-03-10 18:54:36 - [DEBUG   ] -    • learning_rate: 0.1
+2026-03-10 18:54:36 - [DEBUG   ] -    • max_depth: 4
+2026-03-10 18:54:36 - [DEBUG   ] -    Iniciando entrenamiento...
+2026-03-10 18:54:36 - [INFO    ] - ✅ Modelo entrenado exitosamente
+2026-03-10 18:54:36 - [INFO    ] - 
+[PASO 6] Evaluando el modelo en datos de prueba...
+2026-03-10 18:54:36 - [INFO    ] - ✅ Métricas del modelo:
+2026-03-10 18:54:36 - [INFO    ] -    • Exactitud (Accuracy)  : 100.00%
+2026-03-10 18:54:36 - [INFO    ] -    • Precisión (Precision) : 100.00%
+2026-03-10 18:54:36 - [INFO    ] -    • Sensibilidad (Recall) : 100.00%
+2026-03-10 18:54:36 - [INFO    ] -    • F1-Score              : 1.0000
+2026-03-10 18:54:36 - [DEBUG   ] - 
+📊 REPORTE DETALLADO DE CLASIFICACIÓN:
+2026-03-10 18:54:36 - [DEBUG   ] - 
+              precision    recall  f1-score   support
+
+  Normal (0)       1.00      1.00      1.00        80
+   Fallo (1)       1.00      1.00      1.00        20
+
+    accuracy                           1.00       100
+   macro avg       1.00      1.00      1.00       100
+weighted avg       1.00      1.00      1.00       100
+
+2026-03-10 18:54:36 - [INFO    ] - 
+[PASO 7] Realizando predicción con nueva lectura de sensores...
+2026-03-10 18:54:36 - [INFO    ] - 📊 Datos de entrada:
+2026-03-10 18:54:36 - [INFO    ] -    • Temperatura    : 92°C  (normal: ~70°C)
+2026-03-10 18:54:36 - [INFO    ] -    • Vibración      : 7.8 Hz  (normal: ~4 Hz)
+2026-03-10 18:54:36 - [INFO    ] -    • Presión aceite : 3.5 bar (normal: ~5 bar)
+2026-03-10 18:54:36 - [INFO    ] -    • RPM            : 1750     (normal: ~1500)
+2026-03-10 18:54:36 - [INFO    ] - 
+🔮 Resultado de la predicción:
+2026-03-10 18:54:36 - [INFO    ] -    • Estado predicho         : ❌ FALLO DETECTADO
+2026-03-10 18:54:36 - [INFO    ] -    • Probabilidad de fallo   : 100.00%
+2026-03-10 18:54:36 - [INFO    ] -    • Probabilidad de normalidad : 0.00%
+2026-03-10 18:54:36 - [WARNING ] - ⚠️  ACCIÓN: Programar mantenimiento URGENTE
+2026-03-10 18:54:36 - [INFO    ] - 
+[PASO 8] Calculando importancia de variables...
+2026-03-10 18:54:36 - [INFO    ] - ✅ Importancia de variables (sensores más críticos):
+2026-03-10 18:54:36 - [INFO    ] -    1. vibracion          ███████████████████████████████████████ 100.00%
+2026-03-10 18:54:36 - [INFO    ] -    2. rpm                 0.00%
+2026-03-10 18:54:36 - [INFO    ] -    3. presion_aceite      0.00%
+2026-03-10 18:54:36 - [INFO    ] -    4. temperatura         -0.00%
+2026-03-10 18:54:36 - [INFO    ] - 
+[PASO 9] Guardando resultados en archivo JSON...
+2026-03-10 18:54:36 - [INFO    ] - ✅ Resultados guardados en: ./outputs/resultados_20260310_185434.json
+2026-03-10 18:54:36 - [INFO    ] - 
+[PASO 10] Generando gráficos...
+2026-03-10 18:54:36 - [DEBUG   ] -    Generando Gráfico 1: Distribución de datos...
+2026-03-10 18:54:36 - [DEBUG   ] -    Generando Gráfico 2: Importancia de variables...
+2026-03-10 18:54:36 - [DEBUG   ] -    Generando Gráfico 3: Matriz de confusión...
+2026-03-10 18:54:36 - [DEBUG   ] -    Generando Gráfico 4: Probabilidad de fallo...
+2026-03-10 18:54:36 - [INFO    ] - ✅ Gráfico guardado: ./outputs/resultado_modelo_20260310_185434.png
+2026-03-10 18:54:36 - [INFO    ] - 
+======================================================================
+2026-03-10 18:54:36 - [INFO    ] -   📊 RESUMEN DE LA EJECUCIÓN
+2026-03-10 18:54:36 - [INFO    ] - ======================================================================
+2026-03-10 18:54:36 - [INFO    ] - Archivos generados:
+2026-03-10 18:54:36 - [INFO    ] -   ✅ Log de ejecución    : ./outputs/ejecucion_20260310_185434.log
+2026-03-10 18:54:36 - [INFO    ] -   ✅ Resultados JSON     : ./outputs/resultados_20260310_185434.json
+2026-03-10 18:54:36 - [INFO    ] -   ✅ Gráficos            : ./outputs/resultado_modelo_20260310_185434.png
+2026-03-10 18:54:36 - [INFO    ] - 
+Métricas finales:
+2026-03-10 18:54:36 - [INFO    ] -   • Accuracy : 100.00%
+2026-03-10 18:54:36 - [INFO    ] -   • Precision: 100.00%
+2026-03-10 18:54:36 - [INFO    ] -   • Recall   : 100.00%
+2026-03-10 18:54:36 - [INFO    ] -   • F1-Score : 1.0000
+2026-03-10 18:54:36 - [INFO    ] - 
+======================================================================
+2026-03-10 18:54:36 - [INFO    ] -   ✅ Script finalizado exitosamente
+2026-03-10 18:54:36 - [INFO    ] - ======================================================================

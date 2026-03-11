@@ -73,27 +73,35 @@ logger.debug(f"   Scikit-learn: OK")
 # ── PASO 2: Crear datos simulados de sensores industriales ───
 logger.info("\n[PASO 2] Generando datos simulados de sensores...")
 
-np.random.seed(42)   # Fijar semilla para resultados reproducibles
-N = 500              # 500 registros de sensores históricos
+np.random.seed(23)   # Fijar semilla para resultados reproducibles
+N = 100000000              # 100000000 registros de sensores históricos
 
-logger.debug("   Creando dataset de operación NORMAL (400 registros)...")
-# Generamos lecturas de sensores para operación NORMAL (400 registros)
+logger.debug("   Creando dataset de operación NORMAL (500 registros)...")
+# Generamos lecturas de sensores para operación NORMAL
+# Con más ruido y variabilidad para simular mejor la realidad
 normal = pd.DataFrame({
-    "temperatura":     np.random.normal(70, 5, 400),    # ~70°C normal
-    "vibracion":       np.random.normal(4.0, 0.5, 400), # ~4 Hz normal
-    "presion_aceite":  np.random.normal(5.0, 0.3, 400), # ~5 bar normal
-    "rpm":             np.random.normal(1500, 50, 400),  # ~1500 RPM
-    "fallo":           0                                 # Sin fallo
+    "temperatura":     np.random.normal(75, 12, 500),    # Mayor varianza
+    "vibracion":       np.random.normal(5.2, 1.5, 500),  # Más ruido realista
+    "presion_aceite":  np.random.normal(4.8, 0.8, 500),  # Variación natural
+    "rpm":             np.random.normal(1520, 150, 500), # RPM más variable
+    "humedad":         np.random.normal(45, 15, 500),    # 🆕 Nuevo sensor
+    "velocidad_aire":  np.random.normal(8.5, 2.0, 500),  # 🆕 Nuevo sensor
+    "carga":           np.random.normal(65, 20, 500),    # 🆕 Nuevo sensor
+    "fallo":           0                                  # Sin fallo
 })
 
-logger.debug("   Creando dataset de situación de FALLO (100 registros)...")
-# Generamos lecturas de sensores para situación de FALLO (100 registros)
+logger.debug("   Creando dataset de situación de FALLO (300 registros)...")
+# Generamos lecturas de sensores para situación de FALLO
+# Ahora con MAYOR SUPERPOSICIÓN con datos normales
 fallo = pd.DataFrame({
-    "temperatura":     np.random.normal(95, 8, 100),    # Temperatura alta
-    "vibracion":       np.random.normal(8.5, 1.0, 100), # Vibración alta
-    "presion_aceite":  np.random.normal(3.2, 0.5, 100), # Presión baja
-    "rpm":             np.random.normal(1800, 100, 100), # RPM elevadas
-    "fallo":           1                                 # Con fallo
+    "temperatura":     np.random.normal(82, 14, 300),    # 🔧 Reducida diferencia
+    "vibracion":       np.random.normal(6.8, 1.8, 300),  # 🔧 Menos obvio
+    "presion_aceite":  np.random.normal(4.2, 0.9, 300),  # 🔧 Más superposición
+    "rpm":             np.random.normal(1680, 180, 300), # 🔧 Menos diferencia
+    "humedad":         np.random.normal(60, 18, 300),    # 🔧 Más cercano a normal
+    "velocidad_aire":  np.random.normal(11.2, 2.5, 300), # 🔧 Menor diferencia
+    "carga":           np.random.normal(78, 22, 300),    # 🔧 Más solapamiento
+    "fallo":           1                                  # Con fallo
 })
 
 logger.debug("   Mezclando datos aleatoriamente...")
@@ -108,7 +116,7 @@ logger.info(f"   • Con fallo        : {(datos.fallo == 1).sum()} registros ({(
 # ── PASO 3: Separar Variables ────────────────────────────────
 logger.info("\n[PASO 3] Separando variables de entrada y objetivo...")
 
-X = datos[["temperatura", "vibracion", "presion_aceite", "rpm"]]
+X = datos[["temperatura", "vibracion", "presion_aceite", "rpm", "humedad", "velocidad_aire", "carga"]]
 y = datos["fallo"]
 
 logger.info(f"✅ Variables de entrada (X):")
@@ -136,16 +144,22 @@ logger.debug(f"   • Clases en test : {(y_test == 0).sum()} normal, {(y_test ==
 logger.info("\n[PASO 5] Creando y entrenando modelo Gradient Boosting...")
 
 modelo = GradientBoostingClassifier(
-    n_estimators=100,    # 100 árboles secuenciales
-    learning_rate=0.1,   # Velocidad de aprendizaje
-    max_depth=4,         # Profundidad máxima de cada árbol
+    n_estimators=50,     # 🔧 Reducido de 100 a 50
+    learning_rate=0.15,  # 🔧 Aumentado a 0.15 (más lento = menos overfitting)
+    max_depth=2,         # 🔧 CRÍTICO: Reducido de 4 a 2 (árboles más simples)
+    min_samples_split=10,    # 🆕 Evita splits innecesarios
+    min_samples_leaf=5,      # 🆕 Mínimo de muestras por hoja
+    subsample=0.8,           # 🆕 Usa 80% de datos (reduce overfitting)
     random_state=42
 )
 
 logger.debug("   Parámetros del modelo:")
-logger.debug(f"   • n_estimators: 100")
-logger.debug(f"   • learning_rate: 0.1")
-logger.debug(f"   • max_depth: 4")
+logger.debug(f"   • n_estimators: 50")
+logger.debug(f"   • learning_rate: 0.15")
+logger.debug(f"   • max_depth: 2 (REDUCIDO para evitar overfitting)")
+logger.debug(f"   • min_samples_split: 10")
+logger.debug(f"   • min_samples_leaf: 5")
+logger.debug(f"   • subsample: 0.8")
 logger.debug("   Iniciando entrenamiento...")
 
 modelo.fit(X_train, y_train)
@@ -186,7 +200,10 @@ nueva_lectura = pd.DataFrame({
     "temperatura":    [92],   # Temperatura alta → señal de alerta
     "vibracion":      [7.8],  # Vibración elevada → preocupante
     "presion_aceite": [3.5],  # Presión baja → señal de alerta
-    "rpm":            [1750]  # RPM elevadas
+    "rpm":            [1750], # RPM elevadas
+    "humedad":        [55],   # Humedad moderada
+    "velocidad_aire": [10.5], # Velocidad de aire
+    "carga":          [70]    # Carga moderada
 })
 
 logger.info(f"📊 Datos de entrada:")
@@ -194,6 +211,9 @@ logger.info(f"   • Temperatura    : {nueva_lectura['temperatura'].values[0]}°
 logger.info(f"   • Vibración      : {nueva_lectura['vibracion'].values[0]} Hz  (normal: ~4 Hz)")
 logger.info(f"   • Presión aceite : {nueva_lectura['presion_aceite'].values[0]} bar (normal: ~5 bar)")
 logger.info(f"   • RPM            : {nueva_lectura['rpm'].values[0]}     (normal: ~1500)")
+logger.info(f"   • Humedad        : {nueva_lectura['humedad'].values[0]}%")
+logger.info(f"   • Velocidad aire : {nueva_lectura['velocidad_aire'].values[0]} m/s")
+logger.info(f"   • Carga          : {nueva_lectura['carga'].values[0]}%")
 
 prediccion = modelo.predict(nueva_lectura)[0]
 probabilidad = modelo.predict_proba(nueva_lectura)[0]
@@ -234,9 +254,12 @@ resultados = {
     "modelo": {
         "tipo": "GradientBoostingClassifier",
         "parametros": {
-            "n_estimators": 100,
-            "learning_rate": 0.1,
-            "max_depth": 4
+            "n_estimators": 50,
+            "learning_rate": 0.15,
+            "max_depth": 2,
+            "min_samples_split": 10,
+            "min_samples_leaf": 5,
+            "subsample": 0.8
         }
     },
     "metricas_globales": {
@@ -257,7 +280,10 @@ resultados = {
             "temperatura": float(nueva_lectura['temperatura'].values[0]),
             "vibracion": float(nueva_lectura['vibracion'].values[0]),
             "presion_aceite": float(nueva_lectura['presion_aceite'].values[0]),
-            "rpm": float(nueva_lectura['rpm'].values[0])
+            "rpm": float(nueva_lectura['rpm'].values[0]),
+            "humedad": float(nueva_lectura['humedad'].values[0]),
+            "velocidad_aire": float(nueva_lectura['velocidad_aire'].values[0]),
+            "carga": float(nueva_lectura['carga'].values[0])
         },
         "prediccion": int(prediccion),
         "probabilidad_normal": float(probabilidad[0]),

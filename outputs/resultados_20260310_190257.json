@@ -1,0 +1,48 @@
+{
+    "timestamp": "2026-03-10T19:02:58.717962",
+    "modelo": {
+        "tipo": "GradientBoostingClassifier",
+        "parametros": {
+            "n_estimators": 100,
+            "learning_rate": 0.1,
+            "max_depth": 4
+        }
+    },
+    "metricas_globales": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+    },
+    "datos": {
+        "total_registros": 500,
+        "registros_normales": 400,
+        "registros_fallo": 100,
+        "split_train": 400,
+        "split_test": 100
+    },
+    "prediccion_nueva_lectura": {
+        "entrada": {
+            "temperatura": 92.0,
+            "vibracion": 7.8,
+            "presion_aceite": 3.5,
+            "rpm": 1750.0
+        },
+        "prediccion": 1,
+        "probabilidad_normal": 3.3295482196438186e-05,
+        "probabilidad_fallo": 0.9999667045178036,
+        "accion_recomendada": "⚠️  ACCIÓN: Programar mantenimiento URGENTE"
+    },
+    "importancia_variables": {
+        "vibracion": 0.9999999999999981,
+        "rpm": 1.7324704627616956e-15,
+        "presion_aceite": 2.0926879241643517e-16,
+        "temperatura": -1.4344108028143272e-17
+    },
+    "matriz_confusion": {
+        "TP": 20,
+        "TN": 80,
+        "FP": 0,
+        "FN": 0
+    }
+}
